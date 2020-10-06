@@ -27,6 +27,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 UserData/
+StockData/
 Stonks-env/
 .vscode/
 
