@@ -3,12 +3,14 @@ import pandas as pd
 import time, pytz
 from datetime import datetime
 from os import path
+import threading
+
 
 import Data
 
 class Trader:
 
-    self.time_zone = 'America/New_York'
+    time_zone = 'America/New_York'
 
     def __init__(self):
 
@@ -20,10 +22,8 @@ class Trader:
 
         self.api = trading.REST(self.key, self.secret_key, base_url=self.endpoint)
 
-        print(f'endpoint: {self.endpoint}')
-        print(f'key: {self.key}')
-        print(f'secret: {self.secret_key}')
-
+        print(f'endpoint: {self.endpoint}\n')
+        
 
     def get_user_data(self):
 
@@ -43,19 +43,31 @@ class Trader:
         print(message)
 
     def getHistData(self, ticker):
-
-        hist = Data.Data(self.api)
-        hist.getHistData(ticker)
-
+        pass
 
 test = Trader()
-print(test.get_user_data())
-#tickers = ['AES', 'MSFT', 'AMZN', 'NVDA', 'DIS', 'AMD', 'AAPL', 'NFLX', 'TSLA', 'GOOG', 'IBM', 'SPY', 'DOW', 'PYPL', 'INTC']
+#print(test2.readBetween('2004-01-02 09:32:00-05:00'))
 
-#for ticker in tickers:
+hist = Data.write(test.api)
+hist.getHistData('DOW')
+
+#test2 = Data.read(test.api, './StockData/DOW.csv')
+#print(test2.da)
+
 #
-#    if not path.isfile(r'StockData/' + ticker + '.csv'):
-#        test.getHistData(ticker)
-#    else:
-#        print('Skipping ' + ticker + ' as dataFrame exists in files')
-#        pass
+#tickers = ['AES', 'MSFT', 'AMZN', 'NVDA', 'DIS', 'AMD', 'AAPL', 'NFLX', 'TSLA', 'GOOG', 'IBM', 'SPY', 'DOW', 'PYPL', 'INTC']
+#
+#threads = []
+#
+#for ticker in tickers:
+#    print('starting ' + ticker)
+#    thread = threading.Thread(target=hist.getHistData, args=(ticker,), daemon=True)
+#    thread.start()
+#    threads.append(thread)
+#
+#while len(threads) != 0:
+#    
+#    for thread in threads:
+#        if not thread.is_alive():
+#            threads.remove(thread)
+#    time.sleep(0.1)
