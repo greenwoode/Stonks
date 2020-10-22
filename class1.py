@@ -8,7 +8,7 @@ import Data
 
 class Trader:
 
-    self.time_zone = 'America/New_York'
+    time_zone = 'America/New_York'
 
     def __init__(self):
 
@@ -49,7 +49,14 @@ class Trader:
 
 
 test = Trader()
-print(test.get_user_data())
+# print(test.get_user_data())
+
+print('got here')
+
+import Data
+hist = Data.Data(test.api)
+hist.getHistData('MSFT')
+
 #tickers = ['AES', 'MSFT', 'AMZN', 'NVDA', 'DIS', 'AMD', 'AAPL', 'NFLX', 'TSLA', 'GOOG', 'IBM', 'SPY', 'DOW', 'PYPL', 'INTC']
 
 #for ticker in tickers:
