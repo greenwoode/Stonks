@@ -9,6 +9,7 @@ from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
 from datetime import datetime
 from os import system
+import pickle
 
 ticker_data = pd.read_csv("../StockData/MSFT.csv")
 
@@ -17,8 +18,8 @@ ticker_array = np.array(ticker_data)
 start_time_stamp = datetime.fromisoformat(ticker_array[0][0]).timestamp()*1000
 one_week_length = 604800000
 
-two_weeks = start_time_stamp + (one_week_length*1)
-three_weeks = start_time_stamp + (one_week_length*2)
+two_weeks = start_time_stamp + (one_week_length*2)
+three_weeks = start_time_stamp + (one_week_length*3)
 
 learning_data = []
 guessing_data = []
@@ -34,8 +35,6 @@ print(f'start: {datetime.fromtimestamp(start_time_stamp/1000)}')
 x = 0
 
 for point in ticker_array:
-
-    # print(point)
 
     x+=1
     
@@ -62,9 +61,7 @@ for point in ticker_array:
         temp_two_week = np.array(temp_two_week)
         temp_one_week = np.array(temp_one_week)
 
-
         n = 9600
-        n = 4800
         input_matrix = np.zeros((n, 7)) - 1
         input_matrix[:temp_one_week.shape[0],:temp_one_week.shape[1]] = temp_one_week
 
@@ -101,29 +98,38 @@ print(f'end: {datetime.fromtimestamp(start_time_stamp/1000)}')
 # print('one week max: ' + str(one_week_max))
 
 
-print(len(guessing_data[0]))
+# print(len(guessing_data[0]))
+
+# exit(0)
+
+learning_data = np.array(learning_data)
+
+guessing_data = np.array(guessing_data)
+
+# print(learning_data.shape)
+# print(guessing_data.shape)
 
 # exit(0)
 
 ticker_model = tf.keras.Sequential([
-    layers.Dense(9600),
-    layers.Dense(4800, activation='relu'),
+    layers.LSTM(50, return_sequences = True, input_shape = (learning_data.shape[1], 7)),
+    layers.LSTM(50, return_sequences = False),
     layers.Dense(64),
     layers.Dense(7)
 ])
 
 
 
-ticker_model.compile(loss = tf.losses.MeanAbsoluteError(),
+ticker_model.compile(loss = tf.losses.MeanSquaredError(),
                       optimizer = tf.optimizers.Adam(),
                       metrics=['accuracy'])
 
 
-for y in range(5):
-    for x in range(100):
-        print(x)
-        print(ticker_model.fit(learning_data[x], guessing_data[x], epochs=5))
+# for y in range(5):
+ticker_model.fit(learning_data, guessing_data, batch_size=1, epochs=1)
 
+
+pickle.dump( ticker_model, open( "save_model.p", "wb+" ) )
 
 
 # print(ticker_array)
