@@ -61,14 +61,17 @@ for point in ticker_array:
         temp_two_week = np.array(temp_two_week)
         temp_one_week = np.array(temp_one_week)
 
-        n = 9600
-        input_matrix = np.zeros((n, 7)) - 1
-        input_matrix[:temp_one_week.shape[0],:temp_one_week.shape[1]] = temp_one_week
+        try:
+            n = 9600
+            input_matrix = np.zeros((n, 7)) - 1
+            input_matrix[:temp_two_week.shape[0],:temp_two_week.shape[1]] = temp_two_week
 
-        n = 4800
-        objective_matrix = np.zeros((n, 7)) - 1
-        objective_matrix[:temp_one_week.shape[0],:temp_one_week.shape[1]] = temp_one_week
-
+            n = 4800
+            objective_matrix = np.zeros((n, 7)) - 1
+            objective_matrix[:temp_one_week.shape[0],:temp_one_week.shape[1]] = temp_one_week
+        except:
+            print('end of data')
+        
         # print(input_matrix)
 
         # exit(0)
@@ -129,7 +132,7 @@ ticker_model.compile(loss = tf.losses.MeanSquaredError(),
 ticker_model.fit(learning_data, guessing_data, batch_size=1, epochs=1)
 
 
-pickle.dump( ticker_model, open( "save_model.p", "wb+" ) )
+ticker_model.save('saved_model/MSFT.h5') 
 
 
 # print(ticker_array)
