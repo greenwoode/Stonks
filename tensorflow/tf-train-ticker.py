@@ -50,7 +50,7 @@ for point in ticker_array:
 
         else:
 
-            temp_one_week.append(point)
+            temp_one_week.append(point[6])
 
     else:
         # system('cls')
@@ -61,14 +61,16 @@ for point in ticker_array:
         temp_two_week = np.array(temp_two_week)
         temp_one_week = np.array(temp_one_week)
 
+        temp_one_week = np.reshape(temp_one_week, (temp_one_week.shape[0], 1))
+
         try:
             n = 9600
             input_matrix = np.zeros((n, 7)) - 1
             input_matrix[:temp_two_week.shape[0],:temp_two_week.shape[1]] = temp_two_week
 
             n = 4800
-            objective_matrix = np.zeros((n, 7)) - 1
-            objective_matrix[:temp_one_week.shape[0],:temp_one_week.shape[1]] = temp_one_week
+            objective_matrix = np.zeros((n, 1)) - 1
+            objective_matrix[:temp_one_week.shape[0]] = temp_one_week
         except:
             print('end of data')
         
@@ -109,6 +111,10 @@ learning_data = np.array(learning_data)
 
 guessing_data = np.array(guessing_data)
 
+
+print(guessing_data.shape)
+input()
+
 # print(learning_data.shape)
 # print(guessing_data.shape)
 
@@ -118,7 +124,7 @@ ticker_model = tf.keras.Sequential([
     layers.LSTM(50, return_sequences = True, input_shape = (learning_data.shape[1], 7)),
     layers.LSTM(50, return_sequences = False),
     layers.Dense(64),
-    layers.Dense(7)
+    layers.Dense(1)
 ])
 
 
@@ -136,5 +142,3 @@ ticker_model.save('saved_model/MSFT.h5')
 
 
 # print(ticker_array)
-
-
