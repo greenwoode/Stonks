@@ -111,10 +111,6 @@ learning_data = np.array(learning_data)
 
 guessing_data = np.array(guessing_data)
 
-
-print(guessing_data.shape)
-input()
-
 # print(learning_data.shape)
 # print(guessing_data.shape)
 
@@ -134,8 +130,10 @@ ticker_model.compile(loss = tf.losses.MeanSquaredError(),
                       metrics=['accuracy'])
 
 
-# for y in range(5):
-ticker_model.fit(learning_data, guessing_data, batch_size=1, epochs=1)
+for y in range(10):
+    ticker_model.fit(learning_data, guessing_data, batch_size=1, epochs=1)
+    ticker_model.save_weights(f'saved_weights/checkpoint_{y}')
+
 
 
 ticker_model.save('saved_model/MSFT.h5') 
